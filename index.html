@@ -51,7 +51,8 @@
     // Initialize the QR code scanner
     let html5QrCode = new Html5Qrcode("qr-reader");
     html5QrCode.start(
-        { facingMode: "environment" },  // Use the rear camera for scanning
+        { facingMode: { exact: "user" } }  // For front camera
+
         {
             fps: 10,  // Frames per second for QR scanning
             qrbox: { width: 250, height: 250 }
