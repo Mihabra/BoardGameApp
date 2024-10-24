@@ -3,68 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Board Game QR Scanner</title>
+    <title>Camera Test</title>
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
             margin-top: 50px;
         }
-        #qr-reader { 
-            width: 100%; 
-            max-width: 400px; 
-            margin: auto; 
-        }
-        #result { 
-            margin-top: 20px; 
-            font-size: 1.5em; 
+        video {
+            width: 100%;
+            max-width: 400px;
         }
     </style>
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-
 </head>
-<script>
-    const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-        // Show the scanned result
-        document.getElementById('result').innerHTML = `QR Code Data: ${decodedText}`;
-
-        // Process the scanned data based on your game logic
-        processGameAction(decodedText);
-    };
-
-    const qrCodeErrorCallback = (errorMessage) => {
-        // Handle errors or failed scans
-        console.log(errorMessage);
-    };
-
-    function processGameAction(data) {
-        // Implement the game logic based on the QR code data
-        if (data === 'MOVE_FORWARD') {
-            alert('You have moved forward!');
-        } else if (data === 'GAIN_ITEM') {
-            alert('You gained an item!');
-        } else {
-            alert('Unknown action.');
-        }
-    }
-
-    // Initialize the QR code scanner
-    let html5QrCode = new Html5Qrcode("qr-reader");
-    html5QrCode.start(
-        { facingMode: { exact: "user" } }  // For front camera
-
-        {
-            fps: 10,  // Frames per second for QR scanning
-            qrbox: { width: 250, height: 250 }
-        },
-        qrCodeSuccessCallback,
-        qrCodeErrorCallback
-    );
-</script>
-
 <body>
-    <h1>Scan Your QR Code</h1>
-    <div id="qr-reader"></div>
-    <div id="result">Your scan result will appear here.</div>
+    <h1>Camera Test</h1>
+    <video id="camera" autoplay></video>
+
+    <script>
+        // Check for camera access
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                .then(function(stream) {
+                    const video = document.getElementById('camera');
+                    video.srcObject = stream;
+                })
+                .catch(function(err) {
+                    console.log("Error: " + err.name + " - " + err.message);
+                    alert("Error: " + err.name + " - " + err.message);
+                });
+        } else {
+            alert("getUserMedia not supported on this browser!");
+        }
+    </script>
 </body>
 </html>
