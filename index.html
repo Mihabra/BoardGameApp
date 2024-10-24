@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Scanner Test</title>
+    <title>QR Code Scanner Debug</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,47 +20,51 @@
             font-size: 1.2em;
             color: green;
         }
-        #scan-error {
-            margin-top: 10px;
+        #camera-error {
+            margin-top: 20px;
             color: red;
         }
     </style>
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
-    <h1>QR Code Scanner Test</h1>
+    <h1>QR Code Scanner Debug</h1>
     <div id="qr-reader"></div>
     <div id="qr-result">Scan a QR code to see the result here</div>
-    <div id="scan-error"></div>
+    <div id="camera-error"></div>
 
     <script>
+        // Function to handle successful QR code scans
         function onScanSuccess(decodedText, decodedResult) {
             document.getElementById('qr-result').innerText = `QR Code Result: ${decodedText}`;
-            console.log(`Scan result: ${decodedText}`, decodedResult);
+            console.log(`QR Code scanned successfully: ${decodedText}`, decodedResult);
         }
 
-        function onScanFailure(error) {
-            // Display error messages on screen
-            document.getElementById('scan-error').innerText = `Scan failed: ${error}`;
-            console.warn(`Scan failed: ${error}`);
+        // Initialize the QR scanner and start the camera
+        function initializeQrCodeScanner() {
+            let html5QrCode = new Html5Qrcode("qr-reader");
+
+            // Start scanning using the rear camera
+            html5QrCode.start(
+                { facingMode: "environment" },  // Rear camera
+                {
+                    fps: 10,  // Frames per second for QR scanning
+                    qrbox: 250  // Scanning box size
+                },
+                onScanSuccess
+            ).catch(err => {
+                // Display camera initialization error
+                document.getElementById('camera-error').innerText = `Camera Error: ${err}`;
+                console.error(`Camera error: ${err}`);
+            });
         }
 
-        // Initialize the QR code scanner
-        let html5QrCode = new Html5Qrcode("qr-reader");
-
-        // Start scanning using the rear camera
-        html5QrCode.start(
-            { facingMode: "environment" },  // Rear camera
-            {
-                fps: 10,  // Frames per second for QR scanning
-                qrbox: 250  // Scanning box size
-            },
-            onScanSuccess,
-            onScanFailure
-        ).catch(err => {
-            document.getElementById('scan-error').innerText = `QR Code scanning failed: ${err}`;
-            console.error(`QR Code scanning failed: ${err}`);
-        });
+        // Check for camera support before initializing
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            initializeQrCodeScanner();
+        } else {
+            document.getElementById('camera-error').innerText = "Camera not supported on this device/browser.";
+        }
     </script>
 </body>
 </html>
