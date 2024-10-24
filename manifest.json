@@ -2,7 +2,7 @@
   "name": "QR Code Board Game",
   "short_name": "QR Game",
   "description": "Scan QR codes for a board game.",
-  "start_url": "https://github.com/Mihabra/BoardGameApp/blob/main/index.html",
+  "start_url": "/BoardGameApp/index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
