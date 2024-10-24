@@ -3,27 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera Test</title>
+    <title>Instascan QR Code Scanner</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
         video {
             width: 100%;
             max-width: 400px;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/instascan/1.0.0/instascan.min.js"></script>
 </head>
 <body>
-    <h1>Camera Test</h1>
-    <video id="camera" autoplay></video>
+    <h1>QR Code Scanner</h1>
+    <video id="preview"></video>
 
     <script>
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-                .then(function(stream) {
-                    const video = document.getElementById('camera');
-                    video.srcObject = stream;
-                })
-                .catch(function(err) {
-                    alert("Camera Error: " + err.name + " - " + err.message);
-                });
-        } else {
-            alert("Camera not supp
+        let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+        scanner.addListener('scan', function (content) {
+            alert('QR Code Content: ' + content);
+        });
+
+        Instascan.Camera.getCameras().then(function (cameras) {
+            if (cameras.length > 0) {
+                // Use the rear camera (camera[0] is usually the front camera)
+                scanner.start(cameras[0]);
+            } else {
+                alert('No cameras found.');
+            }
+        }).catch(function (e) {
+            alert(e);
+        });
+    </script>
+</body>
+</html>
