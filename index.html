@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Scanner with html5-qrcode</title>
+    <title>QR Code Board Game</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,7 +29,7 @@
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
-    <h1>QR Code Scanner Test</h1>
+    <h1>QR Code Scanner for Board Game</h1>
     <div id="reader" style="width: 400px;"></div>
     <div id="qr-result">QR Code Result will appear here</div>
     <div id="camera-error"></div>
@@ -55,5 +57,9 @@
             cameraError.innerHTML = `Camera Error: ${err}`;
         });
     </script>
-</body>
-</html>
+
+    <script>
+      // Register the service worker for PWA
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+         
