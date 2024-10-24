@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Test</title>
+    <title>QR Code Test with Delay</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,7 +27,7 @@
     <script src="https://unpkg.com/@zxing/browser@latest"></script>
 </head>
 <body>
-    <h1>QR Code Scanner Test</h1>
+    <h1>QR Code Scanner with Delay</h1>
     <video id="video" autoplay></video>
     <div id="qr-result">QR Code Result will appear here</div>
     <div id="camera-error"></div>
@@ -38,20 +38,22 @@
         const resultElement = document.getElementById('qr-result');
         const errorElement = document.getElementById('camera-error');
 
-        // Initialize camera feed
+        // Start the camera feed first
         navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
             .then((stream) => {
                 videoElement.srcObject = stream;
 
-                // Start QR code scanner
-                codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
-                    if (result) {
-                        resultElement.innerHTML = `QR Code Result: ${result.text}`;
-                    }
-                    if (err && !(err instanceof ZXing.NotFoundException)) {
-                        errorElement.innerHTML = `Error: ${err}`;
-                    }
-                });
+                // After a 3-second delay, attempt to start QR code scanning
+                setTimeout(() => {
+                    codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
+                        if (result) {
+                            resultElement.innerHTML = `QR Code Result: ${result.text}`;
+                        }
+                        if (err && !(err instanceof ZXing.NotFoundException)) {
+                            errorElement.innerHTML = `Error: ${err}`;
+                        }
+                    });
+                }, 3000);  // 3-second delay to ensure the camera feed is running
             })
             .catch((err) => {
                 errorElement.innerHTML = `Camera Error: ${err}`;
