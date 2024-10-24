@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZXing QR Code Scanner</title>
+    <title>Simple Camera Access</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,42 +14,30 @@
             width: 100%;
             max-width: 400px;
         }
-        #qr-result {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: green;
-        }
         #camera-error {
             margin-top: 20px;
             color: red;
         }
     </style>
-    <script src="https://unpkg.com/@zxing/browser@latest"></script>
 </head>
 <body>
-    <h1>QR Code Scanner with ZXing</h1>
+    <h1>Camera Test</h1>
     <video id="video" autoplay></video>
-    <div id="qr-result">QR Code Result will appear here</div>
     <div id="camera-error"></div>
 
     <script>
-        // Use ZXing library to initialize the camera and scanner
-        const codeReader = new ZXing.BrowserQRCodeReader();
+        // Get access to the camera
         const videoElement = document.getElementById('video');
-        const resultElement = document.getElementById('qr-result');
         const errorElement = document.getElementById('camera-error');
 
-        // Start scanning using the rear camera
-        codeReader.decodeFromVideoDevice(null, 'video', (result, err) => {
-            if (result) {
-                resultElement.innerHTML = `QR Code Result: ${result.text}`;
-            }
-            if (err && !(err instanceof ZXing.NotFoundException)) {
-                errorElement.innerHTML = `Error: ${err}`;
-            }
-        }).catch(err => {
-            errorElement.innerHTML = `Camera Error: ${err}`;
-        });
+        // Try accessing the camera
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+            .then((stream) => {
+                videoElement.srcObject = stream;
+            })
+            .catch((err) => {
+                errorElement.innerHTML = `Camera Error: ${err}`;
+            });
     </script>
 </body>
 </html>
