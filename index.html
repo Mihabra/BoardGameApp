@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Camera Access</title>
+    <title>QR Code Test</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,26 +14,44 @@
             width: 100%;
             max-width: 400px;
         }
+        #qr-result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: green;
+        }
         #camera-error {
             margin-top: 20px;
             color: red;
         }
     </style>
+    <script src="https://unpkg.com/@zxing/browser@latest"></script>
 </head>
 <body>
-    <h1>Camera Test</h1>
+    <h1>QR Code Scanner Test</h1>
     <video id="video" autoplay></video>
+    <div id="qr-result">QR Code Result will appear here</div>
     <div id="camera-error"></div>
 
     <script>
-        // Get access to the camera
+        const codeReader = new ZXing.BrowserQRCodeReader();
         const videoElement = document.getElementById('video');
+        const resultElement = document.getElementById('qr-result');
         const errorElement = document.getElementById('camera-error');
 
-        // Try accessing the camera
+        // Initialize camera feed
         navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
             .then((stream) => {
                 videoElement.srcObject = stream;
+
+                // Start QR code scanner
+                codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
+                    if (result) {
+                        resultElement.innerHTML = `QR Code Result: ${result.text}`;
+                    }
+                    if (err && !(err instanceof ZXing.NotFoundException)) {
+                        errorElement.innerHTML = `Error: ${err}`;
+                    }
+                });
             })
             .catch((err) => {
                 errorElement.innerHTML = `Camera Error: ${err}`;
