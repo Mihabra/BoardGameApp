@@ -3,7 +3,7 @@
   "short_name": "QR Game",
   "description": "Scan QR codes for a board game.",
   "start_url": "/BoardGameApp/index.html",
-  "display": "standalone",
+ "display": "minimal-ui",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
