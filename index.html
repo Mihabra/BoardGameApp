@@ -20,6 +20,10 @@
             font-size: 1.2em;
             color: green;
         }
+        #scan-error {
+            margin-top: 10px;
+            color: red;
+        }
     </style>
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
@@ -27,6 +31,7 @@
     <h1>QR Code Scanner Test</h1>
     <div id="qr-reader"></div>
     <div id="qr-result">Scan a QR code to see the result here</div>
+    <div id="scan-error"></div>
 
     <script>
         function onScanSuccess(decodedText, decodedResult) {
@@ -35,13 +40,15 @@
         }
 
         function onScanFailure(error) {
+            // Display error messages on screen
+            document.getElementById('scan-error').innerText = `Scan failed: ${error}`;
             console.warn(`Scan failed: ${error}`);
         }
 
         // Initialize the QR code scanner
         let html5QrCode = new Html5Qrcode("qr-reader");
 
-        // Start scanning using the default settings (rear camera)
+        // Start scanning using the rear camera
         html5QrCode.start(
             { facingMode: "environment" },  // Rear camera
             {
@@ -51,6 +58,7 @@
             onScanSuccess,
             onScanFailure
         ).catch(err => {
+            document.getElementById('scan-error').innerText = `QR Code scanning failed: ${err}`;
             console.error(`QR Code scanning failed: ${err}`);
         });
     </script>
