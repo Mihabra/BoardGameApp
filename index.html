@@ -43,10 +43,12 @@
             qrResult.innerHTML = `QR Code Result: ${decodedText}`;
         }
 
-        function onScanError(errorMessage) {
-            cameraError.innerHTML = `Scan Error: ${errorMessage}`;
-            console.error("Scan error:", errorMessage);
-        }
+      function onScanError(errorMessage) {
+    cameraError.innerHTML = `Scan Error: ${errorMessage}`;
+    console.error("Scan error:", errorMessage);
+    if (errorMessage.includes("No MultiFormat Readers were able to detect the code")) {
+        console.warn("The QR code was not detected. Try adjusting the distance or lighting.");
+    }
 
         // Start the scanner with simplified constraints
         const constraints = {
