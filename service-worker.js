@@ -18,9 +18,16 @@ self.addEventListener('install', (event) => {
 
 // Serve cached content when offline
 self.addEventListener('fetch', (event) => {
+  console.log('Fetch request for:', event.request.url);
   event.respondWith(
     caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
+      if (response) {
+        console.log('Serving from cache:', event.request.url);
+        return response;
+      }
+      console.log('Fetching from network:', event.request.url);
+      return fetch(event.request);
     })
   );
 });
+
