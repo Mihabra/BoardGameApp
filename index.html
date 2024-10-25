@@ -48,9 +48,9 @@
             console.error("Scan error:", errorMessage);
         }
 
-        // Start the scanner with fallback facing mode
+        // Start the scanner with simplified constraints
         const constraints = {
-            facingMode: { ideal: "environment" } // Attempt to use the rear camera
+            facingMode: { ideal: "environment" }
         };
 
         console.log("Attempting to start QR Code scanner...");
