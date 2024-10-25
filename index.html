@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Board Game</title>
-    <!-- Correct manifest file link -->
     <link rel="manifest" href="/BoardGameApp/manifest.json">
     <meta name="theme-color" content="#000000">
     <style>
@@ -27,7 +26,7 @@
             color: red;
         }
     </style>
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script> <!-- Use the CDN link -->
 </head>
 <body>
     <h1>QR Code Scanner for Board Game</h1>
@@ -46,30 +45,33 @@
 
         function onScanError(errorMessage) {
             cameraError.innerHTML = `Error: ${errorMessage}`;
+            console.error("Scan error:", errorMessage);
         }
 
         // Start the scanner
         const html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start({ facingMode: "environment" }, {
-            fps: 10,
-            qrbox: { width: 250, height: 250 }
-        }, onScanSuccess, onScanError)
-        .catch((err) => {
+        html5QrCode.start(
+            { facingMode: "environment" },
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            onScanSuccess,
+            onScanError
+        ).catch((err) => {
             cameraError.innerHTML = `Camera Error: ${err}`;
+            console.error("Camera error:", err);
         });
-    </script>
 
-    <script>
-      // Register the service worker for PWA
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/BoardGameApp/service-worker.js')
-          .then((registration) => {
-            console.log('Service Worker registered with scope:', registration.scope);
-          })
-          .catch((error) => {
-            console.log('Service Worker registration failed:', error);
-          });
-      }
+        // Register the service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/BoardGameApp/service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
