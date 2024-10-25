@@ -1,9 +1,9 @@
 const cacheName = 'qr-game-cache-v1';
 const assetsToCache = [
-  '/index.html',
-  '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png',
+  '/BoardGameApp/index.html',
+  '/BoardGameApp/manifest.json',
+  '/BoardGameApp/icon-192.png',
+  '/BoardGameApp/icon-512.png',
   'https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js'
 ];
 
