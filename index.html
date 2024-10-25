@@ -34,33 +34,29 @@
     <div id="qr-result">QR Code Result will appear here</div>
     <div id="camera-error"></div>
 
-    <script>
-        const video = document.getElementById('video');
-        const qrResult = document.getElementById('qr-result');
-        const cameraError = document.getElementById('camera-error');
+   <script>
+    const qrResult = document.getElementById('qr-result');
+    const cameraError = document.getElementById('camera-error');
 
-        // Start the camera feed
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-            .then(stream => {
-                video.srcObject = stream;
+    function onScanSuccess(decodedText, decodedResult) {
+        qrResult.innerHTML = `QR Code Result: ${decodedText}`;
+    }
 
-                // Now initialize QR code reader
-                const html5QrCode = new Html5Qrcode("reader");
-                html5QrCode.start({ facingMode: "environment" }, { 
-                    fps: 10, 
-                    qrbox: { width: 300, height: 300 } 
-                }, (decodedText, decodedResult) => {
-                    qrResult.innerHTML = `QR Code Result: ${decodedText}`;
-                }, (errorMessage) => {
-                    cameraError.innerHTML = `Scan Error: ${errorMessage}`;
-                }).catch(err => {
-                    cameraError.innerHTML = `Camera Error: ${err.message || 'Unknown error'}`;
-                });
-            })
-            .catch(err => {
-                cameraError.innerHTML = `Camera Access Error: ${err.message || 'Unknown error'}`;
-                console.error("Error accessing the camera: ", err);
-            });
-    </script>
+    function onScanError(errorMessage) {
+        console.warn("QR scan error:", errorMessage);
+    }
+
+    // Initialize QR code scanner once camera is confirmed working
+    const html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        onScanSuccess,
+        onScanError
+    ).catch(err => {
+        cameraError.innerHTML = `QR Scanner Error: ${err.message || 'Unknown error'}`;
+        console.error("QR Scanner initialization error:", err);
+    });
+</script>
 </body>
 </html>
