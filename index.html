@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Board Game</title>
-    <link rel="manifest" href="/BoardGameApp/manifest.json">
+    <link rel="manifest" href="https://github.com/Mihabra/BoardGameApp/blob/main/manifest.json">
     <meta name="theme-color" content="#000000">
     <style>
         body {
@@ -26,7 +26,7 @@
             color: red;
         }
     </style>
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script> <!-- Updated CDN link -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 <body>
     <h1>QR Code Scanner for Board Game</h1>
@@ -48,29 +48,29 @@
             console.error("Scan error:", errorMessage);
         }
 
-        // Start the scanner
+        // Start the scanner with video resolution adjustments
+        const constraints = {
+            facingMode: "environment",
+            width: { ideal: 1280 }, // Adjust resolution
+            height: { ideal: 720 }
+        };
+
+        console.log("Starting QR Code scanner...");
         const html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-            { facingMode: "environment" },
-            { fps: 10, qrbox: { width: 250, height: 250 } },
-            onScanSuccess,
-            onScanError
-        ).catch((err) => {
-            cameraError.innerHTML = `Camera Error: ${err}`;
-            console.error("Camera error:", err);
-        });
+        html5QrCode.start(constraints, { fps: 10, qrbox: { width: 300, height: 300 } }, onScanSuccess, onScanError)
+            .catch((err) => {
+                cameraError.innerHTML = `Camera Error: ${err.message}`;
+                console.error("Camera error:", err);
+            });
 
         // Register the service worker for PWA
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/BoardGameApp/service-worker.js')
-                    .then((registration) => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch((error) => {
-                        console.error('Service Worker registration failed:', error);
-                    });
-            });
+            navigator.serviceWorker.register('/service-worker.js')
+                .then((registration) => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }).catch((error) => {
+                    console.error('Service Worker registration failed:', error);
+                });
         }
     </script>
 </body>
