@@ -39,8 +39,17 @@
         const cameraError = document.getElementById('camera-error');
 
         function onScanSuccess(decodedText) {
-            qrResult.innerHTML = `QR Code Result: ${decodedText}`;
-        }
+    // Check if the decoded text starts with a specific prefix
+    const customPrefix = "MY_GAME_CODE_"; // Set your unique prefix here
+
+    if (decodedText.startsWith(customPrefix)) {
+        qrResult.innerHTML = `Special Game QR Code: ${decodedText}`;
+        // Add additional actions here if needed, such as triggering game events
+    } else {
+        qrResult.innerHTML = `Standard QR Code Result: ${decodedText}`;
+    }
+}
+
 
         function onScanError(errorMessage) {
             console.warn("Scan Error:", errorMessage);
